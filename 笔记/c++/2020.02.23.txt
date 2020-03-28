@@ -1,0 +1,13 @@
+今天仔细了解了下面向对象多态
+以前都觉得所学的类的内容够用了  2333
+类的多态肯定要讲继承 有继承才有多态
+class base
+{
+base() {cout<<"base init()"<<endl;}
+	void work(){cout<<"base work()"<<endl;}
+}
+class subclass:base
+{
+	subclass(){cout<<"sub init()"<<endl;}
+	void work(){cout<<"sub work()"<<endl;}
+}

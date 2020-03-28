@@ -1,0 +1,107 @@
+c++:
+if else while for struct typedef 
+
+void int char unsigned wchar_t
+
+指针 函数 多线程
+库里的:
+string vector
+
+还需要学习的是 模板 c11 c14 c17 算法
+
+WinSocket  看着笔记还是能写客户端服务端的[狗头]
+Win32窗口  用过Edit Button 等控件 虽然大多都忘了 因为最近在自写UI
+WinHook
+动态库注入  动态库的基础编写
+
+第三方
+SDL2 (微软vsIDE不预装的)
+{
+	跨平台
+	绘图效率比GDI好
+	使用简单 正如其名Simple (directmedia layer)
+	缺点嘛
+	TTF现在可能对中文的字体支持不是很好 加载字体绘不出来 也许是我的操作方式不对 233	
+	
+	
+}
+第三方库
+Direct2D(微软vsIDE自带)
+{
+	一个D2Dfactory就可以创建渲染目标
+	画图所需步骤跟SDL2差不多
+	但是感觉SDL2的效率略高(在渲染3d的立方体下创建surface进行渲染的效率)
+	跟SDL2对比:
+	1.
+	SDL2绘图可以直接设置输出颜色
+	D2D可能需要一个绘图画刷(虽然没用过绘图画刷 应该可以在绘图画刷下设置颜色)
+	
+	2.
+	它两的矩形我更喜欢SDL2的
+	
+	SDL2的矩形是设置X,Y,宽,高	
+	而D2D的矩形是Left,Right,Top,Bottom
+	
+	sdl2的矩形宽高就是宽高
+	而D2D矩形的宽=Right-Left 高=Bottom-Top
+	
+	3.
+	D2D可以用DWrite绘制文字
+	DWrite绘制文字质量高载入字体的时候直接输 字体名字  如微软雅黑
+	可能DWrite是在调系统的一个字体位置下的 所以前面不用加路径(猜测)
+	
+	SDL2绘制文字呢 用SDL_ttf库
+	载入字体需要自己带路径 载入时有时会出错
+	而且绘制的文字质量不是很好 选自小字体的时候会有锯齿 果然还是微软叼啊
+	
+	4.
+	载入位图
+	D2D用的是WIC
+	SDL2用的是SDL_Image
+	D2D载入位图比较繁琐
+	SDL_Image一行代码搞定
+	
+	5.
+	D2D有Effect实现模糊等不需要自己搞算法
+	实现模糊的代码数跟OpenCv差不多
+	
+	而SDL2实现模糊呢 我之前看过一篇博客
+	是需要Surface读取像素用For循环加模糊算法实现
+	如果你是用Render的话还得把Surface转成Texture才能绘制
+	
+	以上这些是我个人经验总结的 可能会有更好的方法解决
+	我的意思是这些缺点可能未来会改进 或者现在存在着更好的解决方案
+	但是这些都不重要 上面的对比只是用我所知道的进行对比
+}
+Direct3D(微软vsIDE自带) 
+{	
+	D3DDevice
+	D3DContext
+	PixelShader
+	VertexShader
+	Blob
+	InputLayout
+	HLSL
+	....
+}
+
+OpenCv
+{
+	用过来提取视频里的帧
+	暂未深入学习
+	暂知此库可做
+	图形特效(模糊 高斯模糊)  人脸识别
+	各格式的图片转换 
+	视频抽帧
+}
+
+DirectInput
+{
+	接收鼠标键盘输入信息
+	接收手柄的输入信息
+	这个比网上所能查到的KEYDOWN宏强大多了
+	比KEYDOWN高效
+	判断的时间单位精确到毫秒为单位 可以高速判断键盘状态从而做出反应
+	做游戏最好就用这个了
+	而且窗口过程或者宏不能判断手柄的输入状态吧
+}

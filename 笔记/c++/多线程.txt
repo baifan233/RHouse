@@ -1,0 +1,20 @@
+一个线程例子:
+void threadFunc()
+{
+printf("a");
+}
+int main()
+{
+thread t(threadFunc);
+while(true) 
+{
+//TODO
+}
+return 0;
+}
+
+线程的结束要用  thread::join或thread::detach
+两者的区别:
+join是你调用join之后等到线程函数执行完成再结束然后再回到你的主线程
+而detach是你在主线程调用之后直接结束线程
+

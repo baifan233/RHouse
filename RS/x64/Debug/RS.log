@@ -1,0 +1,6 @@
+﻿  Main.cpp
+G:\develop\encode\Project1\RS\Functions.h(30,23): warning C4244: “return”: 从“LRESULT”转换到“HRESULT”，可能丢失数据
+G:\develop\encode\Project1\RS\Functions.h(32,9): warning C4244: “return”: 从“WPARAM”转换到“HRESULT”，可能丢失数据
+G:\develop\encode\Project1\RS\Functions.h(77,23): warning C4244: “return”: 从“LRESULT”转换到“HRESULT”，可能丢失数据
+G:\develop\encode\Project1\RS\Functions.h(79,9): warning C4244: “return”: 从“WPARAM”转换到“HRESULT”，可能丢失数据
+  RS.vcxproj -> G:\develop\encode\Project1\x64\Debug\RS.exe

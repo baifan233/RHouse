@@ -1,0 +1,20 @@
+﻿  Main.cpp
+G:\develop\encode\Project1\Test\RTimer.h(11,2): warning C4091: “typedef ”: 没有声明变量时忽略“RTimer_t”的左侧
+G:\develop\encode\Project1\Test\RTimer.h(68,30): warning C4267: “=”: 从“size_t”转换到“BYTE”，可能丢失数据
+G:\develop\encode\Project1\RS\Main.cpp(276,20): warning C4129: “R”: 不可识别的字符转义序列
+  UI.cpp
+G:\develop\encode\Project1\RS\UI.cpp(661,70): warning C4305: “-=”: 从“double”到“float”截断
+G:\develop\encode\Project1\RS\UI.cpp(672,71): warning C4305: “+=”: 从“double”到“float”截断
+G:\develop\encode\Project1\RS\UI.cpp(883,121): warning C4066: 宽字符常量的第一个字符之外的字符被忽略
+G:\develop\encode\Project1\RS\UI.cpp(922,23): warning C4244: “参数”: 从“ULONGLONG”转换到“DWORD”，可能丢失数据
+G:\develop\encode\Project1\RS\UI.cpp(980,22): warning C4267: “=”: 从“size_t”转换到“BYTE”，可能丢失数据
+G:\develop\encode\Project1\RS\UI.cpp(981,30): warning C4267: “=”: 从“size_t”转换到“BYTE”，可能丢失数据
+G:\develop\encode\Project1\RS\UI.cpp(1020,22): warning C4267: “=”: 从“size_t”转换到“BYTE”，可能丢失数据
+G:\develop\encode\Project1\RS\UI.cpp(1022,22): warning C4267: “=”: 从“size_t”转换到“BYTE”，可能丢失数据
+G:\develop\encode\Project1\RS\UI.cpp(1124,35): warning C4018: “<”: 有符号/无符号不匹配
+G:\develop\encode\Project1\RS\UI.cpp(1207,22): warning C4267: “=”: 从“size_t”转换到“BYTE”，可能丢失数据
+G:\develop\encode\Project1\RS\UI.cpp(1210,22): warning C4267: “=”: 从“size_t”转换到“BYTE”，可能丢失数据
+  正在生成代码...
+G:\develop\encode\Project1\RS\UI.h(166): warning C4715: “UI::GetEditText”: 不是所有的控件路径都返回值
+G:\develop\encode\Project1\RS\System.h(115): warning C4715: “System::GetD2DRen”: 不是所有的控件路径都返回值
+  RS.vcxproj -> G:\develop\encode\Project1\Debug\RS.exe

@@ -1,0 +1,62 @@
+好久没写代码笔记了
+上一次写是11天前了 2333
+今天发现个有用的东西
+异步调用函数 我以前还没用过  一般都用线程
+BOOL WINAPI QueueUserWorkItem(
+  __in      LPTHREAD_START_ROUTINE Function,
+  __in_opt  PVOID Context,
+  __in      ULONG Flags
+);
+Function就是用户定义的函数，context是P指针，也是Function的参数，Flags表示一组标志值，作用可通过查MSDN看到，这里就不在叙述。
+小例子:
+#include <iostream>
+#include <assert.h>
+#include <Windows.h>
+#include <string>
+using namespace std;
+DWORD WINAPI TestThreadPool1(PVOID pContext);
+DWORD WINAPI TestThreadPool2(PVOID pContext);
+DWORD WINAPI TestThreadPool3(PVOID pContext);
+
+CRITICAL_SECTION g_cs;
+
+int main(int argc, char * argv[])
+{
+
+	QueueUserWorkItem(TestThreadPool1, L"Hello World", WT_EXECUTEDEFAULT);
+	QueueUserWorkItem(TestThreadPool2, L"Hello World", WT_EXECUTEDEFAULT);
+	QueueUserWorkItem(TestThreadPool3, L"Hello World", WT_EXECUTEDEFAULT);
+	getchar();
+	return 0;
+}
+
+DWORD WINAPI TestThreadPool1(PVOID pContext)
+{
+
+	for(int i=0;i<=100;i++)
+	{
+		cout<<"One Thread is : "<<i<<endl;
+	}
+	
+	return 0;
+}
+DWORD WINAPI TestThreadPool2(PVOID pContext)
+{
+
+	for(int i=0;i<=100;i++)
+	{
+		cout<<"Two Thread is : "<<i<<endl;
+	}
+	return 0;
+}
+DWORD WINAPI TestThreadPool3(PVOID pContext)
+{
+
+	for(int i=0;i<=100;i++)
+	{
+		cout<<"Three Thread is : "<<i<<endl;
+	}
+	return 0;
+}
+不是我写的 抄的 没空啊。
+兄弟.上课了

@@ -1,8 +1,0 @@
-﻿  GSystem.cpp
-J:\develop\encode\Project2019.3.17\Project2019.3.17\GSystem.cpp(478,97): warning C4100:  “state”: 未引用的形参
-J:\develop\encode\Project2019.3.17\Project2019.3.17\GSystem.cpp(478,52): warning C4100:  “grounds”: 未引用的形参
-J:\develop\encode\Project2019.3.17\Project2019.3.17\GSystem.cpp(480,6): warning C4101:  “tempo”: 未引用的局部变量
-J:\develop\encode\Project2019.3.17\Project2019.3.17\GSystem.cpp(481,6): warning C4101:  “tempg”: 未引用的局部变量
-J:\develop\encode\Project2019.3.17\Project2019.3.17\GSystem.cpp(576,18): warning C4245:  “=”: 从“int”转换到“unsigned char”，有符号/无符号不匹配
-J:\develop\encode\Project2019.3.17\Project2019.3.17\GSystem.cpp(609,18): warning C4245:  “=”: 从“int”转换到“unsigned char”，有符号/无符号不匹配
-  Project2019.3.17.vcxproj -> J:\develop\encode\Project2019.3.17\Debug\Project2019.3.17.exe

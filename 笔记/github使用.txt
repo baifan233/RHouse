@@ -1,0 +1,41 @@
+注册github账号
+下载gitbash
+
+在本地创建ssh key
+输入
+
+$ ssh-keygen -t rsa -C "your_email@youremail.com"
+
+后面的your_email@youremail.com改为你在github上注册的邮箱，之后会要求确认路径和输入密码，我们这使用默认的一路回车就行。成功的话会在~/下生成.ssh文件夹，进去，打开id_rsa.pub，复制里面的key。
+
+回到github上，进入 Account Settings（账户配置），左边选择SSH Keys，Add SSH Key,title随便填，粘贴在你电脑上生成的key。
+
+github-account
+为了验证是否成功，在git bash下输入
+ssh -T git@github.com
+
+
+如果是第一次的会提示是否continue，输入yes就会看到：You've successfully authenticated, but GitHub does not provide shell access 。这就表示已成功连上github。
+
+接下来我们要做的就是把本地仓库传到github上去，在此之前还需要设置username和email，因为github每次commit都会记录他们。
+
+$ git config --global user.name "your name"
+$ git config --global user.email "your_email@youremail.com"
+
+
+在本地想要上传的仓库  右键 然后 GitBash Here
+
+$ git remote add origin git@github.com:yourName/yourRepo.git  //使用此命令之前要git init  不然无效
+
+推送到远程仓库
+$ git push origin master  如果用不了 可以在push后面加-f  即强制推送
+
+git add [fileName]   添加文件到暂存区
+git commit -m "commit"   如果-m后面的内容 改成 'del' 则是删除文件
+
+如果弄好暂存区之后 推送就行了
+
+
+warning: LF will be replaced by CRLF  解决方法:
+git config --global core.autocrlf true
+具体地址:https://www.jianshu.com/p/450cd21b36a4

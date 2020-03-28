@@ -1,0 +1,35 @@
+今天复习下代码
+平时写代码都是记忆一半的比如d2d的初始化
+
+所以补补新东西  免得不看笔记就写不出来
+
+首先  WinMain函数发生了改变
+如果按照旧的写会有警告
+
+现在的格式是这样了
+
+int WINAPI wWinMain
+(_In_ HISNTANCE hInstance,
+ _In_opt_ HINSTANCE PrehInstance,
+ _In_ LPWSTR nCmdLine,
+ _In_ int nCmdShow)
+
+记法是
+//现在的WinMain函数是wWinMain然后 第三个的参数的类型是LPWSTR  每一个参数前面都是_In_
+//但是第二个的前缀是_In_opt_
+
+忘掉旧的WinMain写法吧[狗头]
+
+然后D2D的初始化
+D2D1CreateFactory();
+这里的第一个参数嘛只要你是用有参数提示的IDE都能填的了
+D2D1_FACTORY_TYPE我们一般用
+D2D1_FACTORY_TYPE_SINGLE_THREADED
+
+ID2D1Factory::CreateHwndRenderTarget()
+这里的第一个参数是
+D2D1::RenderTargetProperties()
+第二个是
+D2D1::HwndRenderTargetProperties(窗口句柄,D2D1::SizeU(X尺寸,Y尺寸))
+最后一个参数是ID2D1HwndRenderTarget
+就是渲染目标了

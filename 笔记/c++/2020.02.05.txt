@@ -1,0 +1,210 @@
+今天想做一个游戏限制吧 2333
+首先我们实现了注入dll  这个函数是从网上弄来然后修改的 
+第一个参数是dll的路径  第二个是进程id
+使用这个函数之前可能需要提权   
+bool enableDebugPriv()  //提权函数
+{
+	HANDLE  hToken;
+	LUID    sedebugnameValue;
+	TOKEN_PRIVILEGES tkp;
+	if (!OpenProcessToken(GetCurrentProcess(),
+		TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken)
+		)
+	{
+		return false;
+	}
+	if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &sedebugnameValue))
+	{
+		CloseHandle(hToken);
+		return false;
+	}
+	tkp.PrivilegeCount = 1;
+	tkp.Privileges[0].Luid = sedebugnameValue;
+	tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+	if (!AdjustTokenPrivileges(hToken, FALSE, &tkp, sizeof(tkp), NULL, NULL))
+	{
+		CloseHandle(hToken);
+		return false;
+	}
+	return true;
+}
+bool InjectDll(const char DllPath[MAX_PATH], DWORD pid)//注入函数
+{
+	char	Status[50] = { 0 };					//Return status text
+	//DWORD	pid;								//Process that will be injected
+	DWORD	tid;								//Thread ID of the created thread
+	HANDLE	hProcess;							//Handle to the process
+	HANDLE	hThread;							//Handle to the thread
+	void* WriteAddr;							//Pointer to allocated memory
+
+	//pid = GetDlgItemInt(DialogHwnd, IDC_EDIT_PID, NULL, false);
+	//GetDlgItemText(DialogHwnd, IDC_EDIT_DLL_PATH, DllPath, MAX_PATH);
+	hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
+	if (hProcess != 0)
+	{
+		WriteAddr = VirtualAllocEx(hProcess,
+			0,
+			5 * 1024,
+			MEM_COMMIT, PAGE_EXECUTE_READWRITE
+		);
+		if (WriteAddr == 0)
+			return false;
+		WriteProcessMemory(hProcess, WriteAddr, (LPVOID)DllPath, 5 * 1024, 0);
+		LPVOID pFunc = LoadLibraryA;
+		hThread = CreateRemoteThread(hProcess, 0, 0,
+			(LPTHREAD_START_ROUTINE)pFunc, WriteAddr, 0, &tid);
+
+		WaitForSingleObject(WriteAddr, INFINITE);
+		VirtualFreeEx(hProcess, WriteAddr, 5 * 1024, MEM_COMMIT);
+		//CloseHandle(WriteAddr);
+
+
+		CloseHandle(hProcess);
+
+		if (hThread)
+			return true;
+		else
+			//MessageBox(0, L"失败", L"注入", 0);
+			return false;
+	}
+
+}
+
+
+
+而这个函数呢是根据程序名字获取进程id  注意程序名字是执行文件的名字如
+D:\a.exe  那么程序名字是a.exe而不是这个程序运行之后窗口显示的
+获取进程id的实现呢
+是遍历进程 然后判断其ExeFile的名字是不是你想要的 如果是就返回id
+DWORD GetProcessIdFromName(const wchar_t* name)
+{
+	HANDLE  hsnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (hsnapshot == INVALID_HANDLE_VALUE)
+	{
+		//printf("CreateToolhelp32Snapshot Error!\n");
+		return 0;
+	}
+
+	PROCESSENTRY32 pe;
+	pe.dwSize = sizeof(PROCESSENTRY32);
+
+	int flag = Process32First(hsnapshot, &pe);
+
+	while (flag != 0)
+	{
+		if (lstrcmpW(pe.szExeFile, name) == 0)
+		{
+			return pe.th32ProcessID;
+		}
+		flag = Process32Next(hsnapshot, &pe);
+	}
+
+	CloseHandle(hsnapshot);
+
+	return 0;
+}
+
+这两个结合起来用可以直接注入dll  
+
+而现在我要实现的是如果游戏时间过长 那么注入程序 然后结束
+后面如果游戏时间过长然后注入dll结束 比较简单
+dll就这么写
+BOOL WINAPI DllMain(HMODULE hModule, DWORD reasonForCall, LPVOID lpReserved)
+{
+	//DLL_PROCESS_ATTACH，表示动态链接库刚被某一个进程加载，映射到了某一个地址空间，可以在此进行初始化
+	//DLL_THREAD_ATTACH，动态链接库将被卸载，可以在这进行资源释放
+	//DLL_THREAD_DETACH，应用程序创建了一个新的进程
+	//DLL_PROCESS_DETACH，某个进程正常终止
+	
+	switch (reasonForCall)
+	{
+	case DLL_PROCESS_ATTACH:
+		ExitProcess(0);//加载完动态库就干掉程序
+		break;
+	case DLL_PROCESS_DETACH:
+		
+		break;
+	case DLL_THREAD_ATTACH:
+		break;
+	case DLL_THREAD_DETACH:
+		
+		break;
+	default:
+		break;
+	}
+	return true;
+}
+
+然后编译一下dll注入就完事了
+
+但是呢我们要弄计时这个玩意啊
+首先注入dll之后直接在DLL_PROCESS_ATTACH  写个循环计时
+这样的话程序只能一直计时程序结束了也没法停止计时
+所以这个dll调用是一次性的
+可以选择在DLL_PROCESS_ATTACH消息之后写调用外部计时
+然后继续向程序注入dll  dll的DLL_PROCESS_DETACH 就是程序结束的消息后面
+告诉外部计时over了  然后再统计运行时长
+
+这个方法只能在单个程序运行  就是给多个程序计时不那么好
+可能会有问题
+
+所以换个方法试试
+如果程序调用dll的消息是DLL_PRECESS_ATTACH的话
+那么获取这个程序的窗口句柄 如果句柄不为空  就继续计时
+我试了下 这方法也不行  因为你结束程序了 就是X窗口了  dll未结束之前
+窗口也不会被销毁  窗口也未响应
+
+这个窗口未响应可以利用下
+刚刚查到个api是
+IsHungAppWindow
+You call the IsHungAppWindow function to determine if Microsoft Windows considers that a specified application is not responding. An application is considered to be not responding if it is not waiting for input, is not in startup processing, and has not called <link tabindex="0" keywords="_win32_PeekMessage_cpp" xmlns:mshelp="http://msdn.microsoft.com/mshelp"> within the internal timeout period of 5 seconds.
+
+Returns TRUE if the window stops responding, otherwise returns FALSE. Ghost windows always return TRUE. 
+
+返回TRUE就是窗口还响应
+我觉得可以利用这个了
+
+用了下还算准  算是功能完成了 
+就是有点缺陷  这个计时是会多5秒的 可能是这个api的原因
+还有就是有些游戏读取的时候也会未响应
+所以可能有些游戏读取的时候会被误以为程序已经结束 然后停止计时了
+读取未响应会停止计时这个是猜测  我还没试过
+
+搞这些之前还得搞ui
+fuck
+回到之前的进展 要写控件页
+就是一个控件页包含了按钮vector和滑条vector的元素的地址
+Page结构我就这么定义了
+struct Page 
+{
+	vector<ButtonStruct*> buttonsAddr;
+	vector<SlipStruct*> slipsAddr;
+};
+
+至于把控件设置在某一个页里
+int pageid= 0; //要设置在的页数
+int order = -1;
+	order = this->GetOrderById(id, Control_Type);//根据id获取控件在vector组里的元素顺序  
+	if (Control_Type == control_Button)
+	{
+		pages[pageid].buttonsAddr.push_back(&buttons[order]);  //把这个按钮的地址设置在page		
+	}
+	
+这些都不成问题
+然后画控件页就麻烦了点
+这是指针组的向量嘛
+所以得把draw里的每个buttons[i].
+替换成pages[pageCurrent].buttonsAddr[i]->
+好长啊
+这个也不是什么问题吧
+
+问题就在pages[pageCurrent].buttonsAddr[i]->text
+
+sizeof(这个指针指向的字符串)
+得到的size是4
+无论这个字符串的长度是多少  size都是4
+导致了画文字的时候有问题
+经过百度c++ 求指针指向的字符串长度 解决了
+使用api strlen
+这个api的wchar版本就是lstrlenW
+嗯解决了

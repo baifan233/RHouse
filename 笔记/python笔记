@@ -1,0 +1,161 @@
+
+
+
+py笔记
+
+变量的声明  直接写名字 然后= 
+如：
+ a=10
+ 
+ 删除声明要用关键字  del
+ 
+ del a
+ 
+ 
+ if的使用
+ 
+ if不需要加括号  但写完条件之后要加一个:  冒号
+ 也不需要加{}花括号
+ 但是要缩进以说明块的范围
+ 如c++的这么写
+ char s;
+ cin>>s;
+ if(s=='a')
+ {
+ printf("你输入了a");
+ printf("你输入了a");
+ }   //这里的花括号说明了if块的范围 里面 有两行
+ 
+ py版本
+ varInput = input();
+ if varInput=='a'
+	print("你输入了a")
+	print("你输入了a")
+	
+同样说明这个块有两行
+c++的要花括号才可以  py的缩进就是了 
+如果想说明这个语句在if外面
+那么删除前面的空格就可以了
+
+varInput = input("input a number")
+if varInput=='a':
+    print ("输入了a")
+print ("你输入了")
+
+这里如果输入a  那么就会打印输入了a  同时也打印你输入了
+如果你输入的其他  不满足varInput=='a'
+也会输出"你输入了"
+
+循环输出0到99
+i=0;
+while i<100:
+    print(i)
+    i+=1
+
+类型判断
+调函数isinstance  有两个参数
+第一个参数是要判断的对象 第二个参数是要判断的类型
+例子
+var = 10
+result = isinstance(var,int)
+
+result的值是true  
+
+解析下
+即如果var的类型是参数二填的类型就返回true
+否则返回false
+
+
+类型转换
+# int(x[, base]) 将x转换为一个整数，base为进制，默认十进制
+#
+# long(x[, base] ) 将x转换为一个长整数
+#
+# float(x) 将x转换到一个浮点数
+#
+# complex(real[, imag])  创建一个复数
+#
+# str(x) 将对象 x 转换为字符串
+#
+# repr(x) 将对象 x 转换为表达式字符串
+#
+# eval(str)  用来计算在字符串中的有效Python表达式, 并返回一个对象
+#
+# tuple(s) 将序列 s 转换为一个元组
+#
+# list(s) 将序列 s 转换为一个列表
+#
+# set(s) 转换为可变集合
+#
+# dict(d) 创建一个字典。d 必须是一个序列(key, value) 元组。
+#
+# frozenset(s) 转换为不可变集合
+#
+# chr(x) 将一个整数转换为一个字符
+#
+# unichr(x) 将一个整数转换为Unicode字符
+#
+# ord(x) 将一个字符转换为它的整数值
+#
+# hex(x) 将一个整数转换为一个十六进制字符串
+#
+# oct(x)  将一个整数转换为一个八进制字符串
+
+if __name__ == "__main__":
+    print(int(1.2)) # 1
+    print(int('12', 16)) # 18
+
+    print(float(1)) # 1.0
+    print(float('123')) # 123.0
+
+    # complex() 函数用于创建一个值为 real + imag * j 的复数或者转化一个字符串或数为复数。如果第一个参数为字符串，则不需要指定第二个参数。
+    print(complex(1, 2)) # (1+2j)
+    print(complex("1")) # (1+0j)
+
+    dict1 = {'a': 'b', 'c': 'd'};
+    print(type(str(dict1))) # {'a': 'b', 'c': 'd'} <class 'str'>
+
+    print(eval('pow(2,2)')) # 4
+
+    print(tuple([1,2,3,4])) # (1, 2, 3, 4)
+
+    aTuple = (123, 'xyz', 'zara', 'abc');
+    print(list(aTuple)) # [123, 'xyz', 'zara', 'abc']
+
+    #set() 函数创建一个无序不重复元素集，可进行关系测试，删除重复数据，还可以计算交集、差集、并集等
+    x = set("yangs")
+    print(x) # {'y', 's', 'n', 'a', 'g'}
+    print(type(x)) # <class 'set'>
+    y = set('yy')
+    print(x & y) # 交集 {'y'}
+    print(x | y) # 并集 {'n', 's', 'g', 'a', 'y'}
+    print(x ^ y) # 非集 {'n', 'g', 'a', 's'}
+    print(x - y) # 差集 {'n', 'g', 's', 'a'}
+
+    print(dict(a='a', b='b', t='t')) # {'a': 'a', 'b': 'b', 't': 't'}
+    print(dict(zip(["a","b"], ["c","d"]))) # {'a': 'b', 'c': 'd'}
+    print(dict([(1, 2), (3, 4)])) # {1: 2, 3: 4}
+
+    # frozenset() 返回一个冻结的集合，冻结后集合不能再添加或删除任何元素。
+    print(frozenset("yangs")) # frozenset({'s', 'y', 'g', 'n', 'a'})
+    print(type(frozenset("yangs"))) # <class 'frozenset'>
+
+    #chr() 用一个范围在 range（256）内的（就是0～255）整数作参数，返回一个对应的字符。
+    print(chr(123)) # {
+    print(chr(48)) # '0'
+
+    print(ord('a')) # 97
+    print(ord('0')) # 48
+
+    # 将10进制整数转换成16进制，以字符串形式表示
+    print(hex(255)) # 0xff
+    print(hex(0)) # 0x0
+    
+    #将一个整数转换成8进制字符串
+    print(oct(10)) # 0o12
+	
+	
+	
+写入文件
+file=open("a.txt",'w')
+file.write("123456")   就这么简单  如果open的第二个参数不填 默认就是  'r'  即读取

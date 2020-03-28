@@ -1,0 +1,76 @@
+关于MessageBox阻塞问题(无论是主线程还是子线程都阻塞!)
+
+MessageBox 叫做“模态对话框”，它的设计目的就是阻塞用户操作
+，（它是25年前微软设计出来的概念）就相当最近几年出现的“遮罩”一样，
+目的都是刻意避免用户操作到其它东西。
+
+由于它是25年前的 Visual Basic for Dos 1.0 就有的设计（或许在微软更早的 Quick Basic 中就有了），
+因此在 .net winform、WPF 中继承下来。微软的东西，
+你懂的，许多几十年前的程序还能当今的 windows 系统下运行，
+不像其它某些系统、开发环境总是在升级时骗粉丝、不兼容以前的东西。
+
+如果你需要一个非模态对话框，
+你完全可以创建一个自定义的 Form然后 Show 这个窗口
+，这就 OK 了。
+因为没任何技术含量，
+所以 .net 完全用不着给你设计什么其它的 MessageBox 语句。以前的这个 MessageBox 甚至你都无需使用。 
+											----摘自https://bbs.csdn.net/topics/391958942?page=1
+											
+											
+											
+											
+ShowWindow函数参数SW_SHOW和SW_SHOWNORMAL区别
+
+SW_SHOW是按原来的状态显示 例如窗口在HIDE之前 是最小化的 那么HIDE之后调用ShowWindow参数用SW_SHOW的话显示出来的是最小化的窗口
+SW_SHOWNORMAL就是普通的显示了
+突然发现PUPOP类型的窗口用SW_SHOWMAXIMIZED的形式显示
+好像游戏里面的无边框窗口全屏  以后做游戏考虑这个
+处理下鼠标在窗口最大化的坐标就可以用了
+
+如果你用showwindow之后窗口没有在最前端显示 调用api SetForegroundWindow就可以了
+
+判断窗口是否显示
+bool IsWindowVisble(Hwnd hwnd);  //相信你都会用了  参数和返回值都标明了
+
+ShowWindow最好用异步  如果不是创建窗口之后的话  就是如果你要HIDE窗口你不想有点阻塞的话(一般不会吧)
+异步的函数就是ShowWindowAsync   参数跟ShowWindow一样的
+
+ShowWindowAsync可以：
+1. 避免死锁
+2. 不需要管理进程窗口
+3. ShowWindow函数对不是自己的窗口会有不可预料行为  ---摘自互联网
+
+
+SetWindowPos函数
+
+BOOL SetWindowPos(
+    _In_ HWND hWnd,
+    _In_opt_ HWND hWndInsertAfter,
+    _In_ int X,
+    _In_ int Y,
+    _In_ int cx,
+    _In_ int cy,
+    _In_ UINT uFlags);
+	
+
+第一个想都不用想就是窗口句柄了
+第二个是一个属性之类的吧 是HWND开头的,有HWND_TOP HWND_TOPMOST之类的
+HWND_TOP跟HWND_TOPMOST区别?
+HWND_TOP是基于桌面窗口上面  意思是桌面上面 但还是会被其他窗口遮住
+
+HWND_TOPMOST是置顶了 无论焦点在不在这个窗口都会遮住后面的窗口
+
+取消置顶呢就应该填参数HWND_NOTOPMOST了
+后面四个参数
+x
+以客户坐标指定窗口新位置的左边界。
+Y
+以客户坐标指定窗口新位置的顶边界。
+cx
+以像素指定窗口的新的宽度。
+cy
+以像素指定窗口的新的高度。
+
+Flag
+所有flag参数都是SWP(SetWIndowPos嘛)开头
+有SWP_NOMOVE  SWP_NOSIZE  两个参数分别是不移动窗口 不改变窗口大小
